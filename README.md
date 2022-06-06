@@ -1,4 +1,4 @@
-# enumerations 
+# L 
 
 The repository contains database of several finite L-algebras. This is based on the paper  
 
