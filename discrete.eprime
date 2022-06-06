@@ -1,0 +1,42 @@
+language ESSENCE' 1.0
+
+given n : int
+given fac : int
+given sq : int
+given perms : matrix indexed by [int(1..fac),int(1..n-1)] of int(1..n-1)
+given invs : matrix indexed by [int(1..fac),int(1..n)] of int(1..n)
+given enum : matrix indexed by [int(1..sq),int(1..2)] of int(1..n-1)
+given M : matrix indexed by [ int(1..n-1) ,int(1..n-1) , int(1..n-1), int(1..n-1) ] of int(0..1)
+
+find L : matrix indexed by [int(1..n),int(1..n)] of int(1..n)
+
+such that
+
+forAll x,y,z : int(1..n). (
+	L[L[x,y],L[x,z]] = L[L[y,x],L[y,z]]
+),
+
+forAll x : int(1..n) . (
+	L[n,x] = x
+),
+
+forAll x,y : int(1..n) . (
+	L[x,y] = n <-> (x=y \/ y=n)
+),
+
+forAll x : int(1..n) . (
+	L[x,n] = n
+),
+
+forAll x,y,z,w : int(1..n-1) . (
+	$ (L[L[L[x,y],L[x,z]],L[L[x,y],L[x,w]]] = n) <-> (M[x,y,z,w]=1)
+	((L[L[x,y],L[x,z]] = L[L[x,y],L[x,w]]) \/ (L[x,y] = L[x,w]) \/ (x = w) \/ w = n) <-> (M[x,y,z,w]=1)
+),
+
+forAll x,y,z : int(1..n-1) . (
+	(L[x,y] = L[x,z] \/ x = z \/ z = n) <-> (M[x,x,y,z]=1)
+),
+
+forAll m : int(1..fac) .(
+	( forAll x,y,z,w : int(1..n-1) . ( M[x,y,z,w] = M[perms[m,x],perms[m,y],perms[m,z],perms[m,w]])) -> ( flatten( [L[enum[k,1],enum[k,2]] | k: int(1..sq) ]) <=lex flatten( [ invs[m, L[perms[m,enum[k,1]],perms[m,enum[k,2]]]] | k: int(1..sq)]) )
+)

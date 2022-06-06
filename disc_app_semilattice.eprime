@@ -1,0 +1,55 @@
+language ESSENCE' 1.0
+
+given n : int
+given fac : int
+given perms : matrix indexed by [int(1..fac),int(1..n)] of int(1..n)
+
+
+find M : matrix indexed by [ int(1..n) ,int(1..n) , int(1..n) , int(1..n)] of int(0..1)
+
+such that
+
+forAll x,y,z : int(1..n) . (
+	M[x,y,z,x]=1
+),
+
+forAll x,y,z,w : int(1..n) . (
+ 	M[x,y,z,w] = M[y,x,z,w]
+),
+
+forAll x,y,z,w : int(1..n) . (
+ 	M[x,y,z,w] = M[x,z,y,w]
+),
+
+forAll x,y,z,w : int(1..n) . (
+ 	M[x,y,z,w] = M[y,z,x,w]
+),
+
+forAll x,y,z,w : int(1..n) . (
+ 	M[x,y,z,w] = M[z,x,y,w]
+),
+
+forAll x,y,z,w : int(1..n) . (
+ 	M[x,y,z,w] = M[z,y,x,w]
+),
+
+forAll a,b,c,x,y,z,w : int(1..n) . (
+	((M[a,b,c,x] = 1) /\ (M[a,b,c,y]= 1) /\ (M[a,b,c,z] =1 ) /\ (M[x,y,z,w] = 1)) -> (M[a,b,c,w] = 1)
+),
+
+forAll x,y: int(1..n) . (
+	(M[x,x,x,y] = 1 /\ M[y,y,y,x] = 1) -> (x=y)
+),
+
+forAll m : int(1..fac) .(
+$	flatten( [ M[x,y,z,w] | x : int(1..n), y : int(1..n) , z: int(1..n), w : int(1..n)] ) <=lex flatten( [ M[perms[m,x],perms[m,y],perms[m,z],perms[m,w]] | x : int(1..n), y : int(1..n) , z: int(1..n), w: int(1..n)] )
+	flatten( [ M[x,y,z,w] | z : int(1..n), y : int(1..z) , x: int(1..y), w: int(1..n)] ) <=lex flatten( [ M[perms[m,x],perms[m,y],perms[m,z],perms[m,w]] | z : int(1..n), y : int(1..z) , x: int(1..y) , w: int(1..n)] )
+),
+
+forAll x,y : int(1..n) . (
+	(M[x,x,x,y] = 1) <-> (x=y)
+),
+
+forAll x,y,z,w,a : int(1..n) . (
+	((M[x,y,z,a] = 1) /\ (M[x,x,y,a] = 0) /\ (M[x,y,z,w] = 1) ) -> (M[x,y,a,w] = 1) $ if a is in the closure of xyz but not of xy then the closure of xya is equal to the closure of xyz meaning: every w in the closure of xya is also equal to the closure of xyz
+)
