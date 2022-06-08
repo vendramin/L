@@ -158,7 +158,7 @@ def param_files(n):
 
         file_number += 1
 
-        params = open(f'non_discrete_{n}_{file_number}.param' , 'w')
+        params = open(f'non_discrete{n}_{file_number}.param' , 'w')
 
         print(f"language ESSENCE' 1.0 \n \nletting P be {P}\n", file = params)
         print(f"letting n be {n} \n", file = params)
@@ -177,8 +177,8 @@ def construct_nondiscrete(n):
     for k in range(2,num+1):
         print(f"Case {k} of {num}:")
         time3 = time.time()
-        os.system(f'savilerow ./lalg_of_poset.eprime ./non_discrete_{n}_{k}.param -run-solver -solver-options "-split" -all-solutions -solutions-to-stdout-one-line | grep --only-matching "\[\[.*\]\]" > L{n}_{k}')
-        output = subprocess.check_output(f'cat ./non_discrete_{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
+        os.system(f'savilerow ./lalg_of_poset.eprime ./non_discrete{n}_{k}.param -run-solver -solver-options "-split" -all-solutions -solutions-to-stdout-one-line | grep --only-matching "\[\[.*\]\]" > L{n}_{k}')
+        output = subprocess.check_output(f'cat ./non_discrete{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
         new_sols = int(output)
         all_sols += new_sols
         time4 = time.time()
@@ -191,34 +191,51 @@ def enumerate_nondiscrete(n):
     num = param_files(n)
     all_sols = 0
     time1 = time.time()
-    for k in range(953  ,954):
+    for k in range(2,num+1):
+
+        # Skip the case where the poset is the diamond 
+        if k == n-1:
+            print("We have skipped the case where the poset is the diamond.")
+            continue
+
         print(f"Case {k} of {num}:")
         time3 = time.time()
-        os.system(f'savilerow ./lalg_of_poset.eprime ./non_discrete_{n}_{k}.param -run-solver -solver-options "-split" -all-solutions -solutions-to-null| grep --only-matching "\[\[.*\]\]"')
-        output = subprocess.check_output(f'cat ./non_discrete_{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
+        os.system(f'savilerow ./lalg_of_poset.eprime ./non_discrete{n}_{k}.param -run-solver -solver-options "-split" -all-solutions -solutions-to-null| grep --only-matching "\[\[.*\]\]"')
+        output = subprocess.check_output(f'cat ./non_discrete{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
         new_sols = int(output)
         all_sols += new_sols
         time4 = time.time()
         print(f"We have found {new_sols} solutions in {time4-time3} seconds.")
+    os.system('rm *.minion')
     time2 = time.time()
-#    os.system('rm ./poset.size*')
     print(f"There are {all_sols} L-Algebras of size {n}. The search took {time2-time1} seconds.")
 
 def construct_nondiscrete(n):
     num = param_files(n)
     all_sols = 0
     time1 = time.time()
-    for k in range(953  ,954):
+    for k in range(2,num+1):
+
+        # Skip the case where the poset is the diamond 
+        if k == n-1:
+            print("We have skipped the case where the poset is the diamond.")
+            continue
+
         print(f"Case {k} of {num}:")
         time3 = time.time()
-        os.system(f'savilerow ./lalg_of_poset.eprime ./non_discrete_{n}_{k}.param -run-solver -solver-options "-split" -all-solutions -solutions-to-null| grep --only-matching "\[\[.*\]\]"')
-        output = subprocess.check_output(f'cat ./non_discrete_{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
+        os.system(f'savilerow ./lalg_of_poset.eprime ./non_discrete{n}_{k}.param -run-solver -solver-options "-split" -all-solutions -solutions-to-stdout-one-line| grep --only-matching "\[\[.*\]\]" > non_discrete{n}_{k}.output')
+
+        os.system(f'bzip2 non_discrete{n}_{k}.output')
+        output = subprocess.check_output(f'cat ./non_discrete{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
         new_sols = int(output)
         all_sols += new_sols
         time4 = time.time()
         print(f"We have found {new_sols} solutions in {time4-time3} seconds.")
+    os.system('rm *.minion')
     time2 = time.time()
     print(f"There are {all_sols} L-Algebras of size {n}. The search took {time2-time1} seconds.")
 
 
-enumerate_nondiscrete(8)
+
+#enumerate_nondiscrete(8)
+construct_nondiscrete(6)
