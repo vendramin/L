@@ -77,7 +77,7 @@ def construct_discrete(n):
 
         line_number += 1
 
-        params = open(f'app_semi_{n-1}.{line_number}.param' , 'w')
+        params = open(f'discrete{n}_{line_number}.param' , 'w')
 
         print(f"language ESSENCE' 1.0 \n \nletting M be {line}", file = params)
         print(f"letting n be {n} \n", file = params)
@@ -108,8 +108,9 @@ def construct_discrete(n):
     for k in range(1,line_number+1):
         time1 = gettime()
         print(f"Case {k} of {line_number}")
-        os.system(f'savilerow ./discrete.eprime ./app_semi_{n-1}.{k}.param -run-solver -all-solutions -solutions-to-stdout-one-line | grep --only-matching "\[\[.*\]\]" > discrete{n}_{k}')
-        output = subprocess.check_output(f'cat ./app_semi_{n-1}.{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
+        os.system(f'savilerow ./discrete.eprime ./discrete{n}_{k}.param -run-solver -all-solutions -solutions-to-stdout-one-line | grep --only-matching "\[\[.*\]\]" > discrete{n}_{k}.output')
+        os.system(f'bzip2 discrete{n}_{k}.output')
+        output = subprocess.check_output(f'cat ./discrete{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
 
         new_sols = int(output)
 
@@ -118,9 +119,8 @@ def construct_discrete(n):
         all_sols += new_sols
         print(f"We have found {new_sols} solutions in {time}.")
 
+    os.system('rm *.minion')
     time4 = gettime()
-
-    os.system(f'rm ./app_semi_{n-1}*')
 
     print(f"There are {all_sols} discrete L-Algebras of size {n}. The search took {time4-time3}.")
 
@@ -144,7 +144,7 @@ def enumerate_discrete(n):
 
         line_number += 1
 
-        params = open(f'app_semi_{n-1}.{line_number}.param' , 'w')
+        params = open(f'discrete{n}_{line_number}.param' , 'w')
 
         print(f"language ESSENCE' 1.0 \n \nletting M be {line}", file = params)
         print(f"letting n be {n} \n", file = params)
@@ -175,8 +175,8 @@ def enumerate_discrete(n):
     for k in range(1,line_number+1):
         time1 = gettime()
         print(f"Case {k} of {line_number}")
-        os.system(f'savilerow ./discrete.eprime ./app_semi_{n-1}.{k}.param -run-solver -all-solutions -solutions-to-null')
-        output = subprocess.check_output(f'cat ./app_semi_{n-1}.{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
+        os.system(f'savilerow ./discrete.eprime ./discrete{n}_{k}.param -run-solver -all-solutions -solutions-to-null')
+        output = subprocess.check_output(f'cat ./discrete{n}_{k}.param.info | grep "SolverSolutionsFound" | grep -E --only-matching "[[:digit:]]*"', shell=True)
 
         new_sols = int(output)
 
@@ -185,10 +185,8 @@ def enumerate_discrete(n):
         all_sols += new_sols
         print(f"We have found {new_sols} solutions in {time}.")
 
+    os.system(f'rm *.minion')
     time4 = gettime()
+    print(f"There are {all_sols} discrete L-algebras of size {n}. The search took {time4-time3}.")
 
-    os.system(f'rm ./app_semi_{n-1}*')
-
-    print(f"There are {all_sols} discrete L-Algebras of size {n}. The search took {time4-time3}.")
-
-enumerate_discrete(7)
+construct_discrete(6)
