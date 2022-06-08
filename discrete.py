@@ -191,7 +191,4 @@ def enumerate_discrete(n):
 
     print(f"There are {all_sols} discrete L-Algebras of size {n}. The search took {time4-time3}.")
 
-
-
-construct_discrete(5)
-enumerate_discrete(5)
+enumerate_discrete(7)

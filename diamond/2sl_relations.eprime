@@ -1,0 +1,21 @@
+language ESSENCE' 1.0
+
+given n: int
+given fac: int
+given perms: matrix indexed by [int(1..fac),int(1..n)] of int(1..n)
+
+find R: matrix indexed by [int(1..n),int(1..n)] of int(0..1) $ 2 means that also the bottom element is annihilated by i n j
+
+such that
+
+forAll i: int(1..n).(
+	R[i,i]=0
+	),
+
+forAll i,j: int(1..n).(
+	R[i,j]=R[j,i]
+	),
+
+forAll m: int(1..fac).(
+	flatten([R[i,j] | j: int(1..n), i: int(1..j)]) >=lex flatten([R[perms[m,i],perms[m,j]] | j: int(1..n), i: int(1..j)])
+	)

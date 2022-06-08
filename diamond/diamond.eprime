@@ -1,0 +1,55 @@
+language ESSENCE' 1.0
+
+given n: int
+given sq: int $ must be (n-2)^2
+given fac: int $ must be (n-2)!
+given enum: matrix indexed by [int(1..sq),int(1..2)] of int(1..n-2) $ enumeration of the (n-2)x(n-2)-square
+given perms: matrix indexed by [int(1..fac),int(1..n-2)] of int(1..n-2) $ permutations fixing n
+given invs: matrix indexed by [int(1..fac),int(1..n)] of int(1..n) $ and their inverses
+given R: matrix indexed by [int(1..n-2),int(1..n-2)] of int(0..1)
+
+find L: matrix indexed by [int(1..n),int(1..n)] of int(1..n)
+
+such that
+
+forAll x: int(1..n).(
+	L[x,n]=n
+	),
+
+forAll x: int(1..n).(
+	L[x,x]=n
+	),
+
+forAll x: int(1..n).(
+	L[n,x]=x
+	),
+
+forAll x: int(1..n).(
+	L[n-1,x]=n
+	),
+
+forAll x,y: int(1..n-2).(
+	x != y -> L[x,y] != n
+	),
+
+forAll x,y,z: int(1..n).(
+	L[L[x,y],L[x,z]]=L[L[y,x],L[y,z]]
+	),
+
+forAll x,y: int(1..n-2).(
+	L[x,n-1]=y -> (forAll z: int(1..n-2). (x != z) -> L[x,z]=y)
+	),
+
+forAll x,y: int(1..n-2). (
+	R[x,y]=1 <-> (forAll z: int(1..n-2). (L[L[x,y],L[x,z]]=n) )
+	),
+
+forAll x,y: int(1..n-2).(
+	L[L[x,n-1],L[x,y]] = n
+	),
+
+forAll m: int(1..fac).(
+	(forAll x,y: int(1..n-2).(R[x,y]=R[perms[m,x],perms[m,y]]))
+	->
+	( flatten( [L[enum[k,1],enum[k,2]] | k: int(1..sq) ]) <=lex flatten( [ invs[m, L[perms[m,enum[k,1]],perms[m,enum[k,2]]]] | k: int(1..sq)]) )
+	)
