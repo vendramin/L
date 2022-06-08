@@ -1,0 +1,46 @@
+language ESSENCE' 1.0
+
+given n: int
+given P: matrix indexed by [int(1..n-1),int(1..n-1)] of int(0..1) $ P[x,y]=1 if and only if x <= y.
+given sq: int $ must be (n-1)^2
+given fac: int $ must be (n-1)!
+given enum: matrix indexed by [int(1..sq),int(1..2)] of int(1..n-1) $ enumeration of the (n-1)x(n-1)-square
+given perms: matrix indexed by [int(1..fac),int(1..n-1)] of int(1..n-1) $ permutations fixing n
+given invs: matrix indexed by [int(1..fac),int(1..n)] of int(1..n) $ and their inverses
+
+find L: matrix indexed by [int(1..n),int(1..n)] of int(1..n)
+
+such that
+
+forAll x: int(1..n).(
+	L[x,x]=n
+	),
+	
+forAll x: int(1..n).(
+	L[x,n]=n
+	),
+
+forAll x: int(1..n).(
+	L[n,x]=x
+	),
+	
+forAll x,y: int(1..n-1).(
+	L[x,y]=n <-> P[x,y]=1
+	),
+
+forAll x,y,z: int(1..n).(
+	L[L[x,y],L[x,z]] = L[L[y,x],L[y,z]]
+	),
+
+forAll m: int(1..fac).(
+	( forAll x,y : int(1..n-1) . ( P[x,y] = P[perms[m,x],perms[m,y]]))
+	->
+	( flatten( [L[enum[k,1],enum[k,2]] | k: int(1..sq) ]) <=lex flatten( [ invs[m, L[perms[m,enum[k,1]],perms[m,enum[k,2]]]] | k: int(1..sq)]) )
+	),
+	
+forAll x,y,z: int(1..n-1). (
+	P[y,z]=1 -> L[L[x,y],L[x,z]] = n
+	),
+	
+forAll x,y,z: int(1..n-1).(
+	P[y,x]=1 -> L[L[x,y],L[x,z]]=L[y,z])
