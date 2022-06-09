@@ -1,4 +1,4 @@
-# L 
+# On the enumeration of finite L-algebras 
 
 The repository contains database of several finite L-algebras. This is based on the paper  
 
@@ -37,3 +37,11 @@ Running savilerow. There are 44 L-algebras in 435ms (= 0:00:00.435)
 ```
 
 There are similar files for constructing and enumerating finite Hilbert algebras. 
+
+## L-algebras of size 8
+
+The database of L-algebras of size 8 requires a different approach. We split the calculation into three cases:
+
+* Diamond poset. To enumerate/construct these L-algebras use the Python script `diamond/diamond.py`. The database (for GAP, compressed) is `data/diamond8.tar`.  
+* Trivial poset (i.e. discrete L-algebras). To enumerate/construct discrete L-algebras use the Python script `discrete/discrete.py`. The database (GAP, compressed) is `data/discrete8.tar`. 
+* Other posets. To enumerate/construct these L-algebras use the Python script `non_discrete/non_discrete.py`. The database (for GAP, compressed) is `data/non_discrete8.tar`. 
