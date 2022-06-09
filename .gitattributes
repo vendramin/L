@@ -1,2 +1,3 @@
 data/non_discrete8.tar filter=lfs diff=lfs merge=lfs -text
 data/diamond8.tar filter=lfs diff=lfs merge=lfs -text
+data/discrete.tar filter=lfs diff=lfs merge=lfs -text
