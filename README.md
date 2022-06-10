@@ -1,5 +1,7 @@
 # On the enumeration of finite L-algebras 
 
+[![DOI](https://zenodo.org/badge/417288153.svg)](https://zenodo.org/badge/latestdoi/417288153)
+
 The repository contains database of several finite L-algebras. This is based on the paper  
 
 > C. Dietzel, P. Menchón, L. Vendramin. On the enumeration of finite L-algebras. 
