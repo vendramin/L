@@ -10,6 +10,7 @@ is_sharp := function(obj)
   return true;
 end;
 
+
 is_symmetric := function(obj)
   local x, y;
   for x in [1..Size(obj)] do
@@ -22,8 +23,56 @@ is_symmetric := function(obj)
   return true;
 end;
 
+is_abelian := function(obj)
+  local x, y, u, v;
+  for x in [1..Size(obj)] do
+    for y in [1..Size(obj)] do
+      for u in [1..Size(obj)] do
+        for v in [1..Size(obj)] do
+          if not obj[obj[x][y]][obj[u][v]] = obj[obj[x][u]][obj[y][v]] then
+            return false;
+          fi;
+        od;
+      od;
+    od;
+  od;
+  return true;
+end;
+
 logical_unit := function(obj)
   return obj[1][1];
+end;
+
+is_L := function(obj)
+  local x, y, z, e;
+
+  e := logical_unit(obj);
+
+  for x in [1..Size(obj)] do
+    for y in [1..Size(obj)] do
+      for z in [1..Size(obj)] do
+        if not obj[obj[x][y]][obj[x][z]] = obj[obj[y][x]][obj[y][z]] then
+          return false;
+        fi;
+      od;
+    od;
+  od;
+
+  for x in [1..Size(obj)] do
+    for y in [1..Size(obj)] do
+      if not x = y and (obj[x][y]=e and obj[y][x]=e) then
+        return false;
+      fi;
+    od;
+  od;
+
+  for x in [1..Size(obj)] do
+    if not obj[x][x] = e or not obj[x][e] = e or not obj[e][x] = x then
+      return false;
+    fi;
+  od;
+        
+  return true;
 end;
 
 leq := function(obj, x, y)
