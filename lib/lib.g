@@ -374,7 +374,7 @@ is_prime_ideal := function(obj, subset)
   l := ideals(obj);
 
   for x in l do
-    if not (IsSubset(x, subset) or IsSubset(dot(obj, x, subset), subset)) then
+    if not (IsSubset(subset, x) or IsSubset(subset, dot(obj, x, subset))) then
       return false;
     fi;
   od;
